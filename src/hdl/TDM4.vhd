@@ -66,7 +66,7 @@ entity TDM4 is
 	);
 end TDM4;
 
-architecture behavioral of TDM4 is
+architecture TDM4_arch of TDM4 is
 
 	signal   f_sel		 : unsigned(1 downto 0)	:= "00"; -- 2 bit counter output to select MUX input
 	
@@ -101,5 +101,5 @@ begin
 			   "1101" when f_sel = "01" else
 			   "1110";
 		
-end behavioral;
+end TDM4_arch;
 

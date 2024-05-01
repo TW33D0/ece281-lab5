@@ -38,7 +38,7 @@ entity ALU is
 -- TODO
 end ALU;
 
-architecture behavioral of ALU is 
+architecture ALU_arch of ALU is 
   
 	-- declare components and signals
 
@@ -52,4 +52,4 @@ begin
 	
 	
 	
-end behavioral;
+end ALU_arch;
