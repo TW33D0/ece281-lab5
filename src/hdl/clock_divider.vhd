@@ -11,8 +11,8 @@
 --| ---------------------------------------------------------------------------
 --|
 --| FILENAME      : clock_divider.vhd
---| AUTHOR(S)     : Capt Phillip Warner
---| CREATED       : 03/2017
+--| AUTHOR(S)     : Capt Phillip Warner, C3C Ty Hubert
+--| CREATED       : 03/2017 Last Modified: 05/01/2024
 --| DESCRIPTION   : This file implements a generic clock divider that uses a counter and comparator.
 --|					This provides more flexibility than simpler designs that use a bit from a 
 --|					clk bus (they only provide divisors of powers of 2).
@@ -66,9 +66,7 @@ architecture countCompare of clock_divider is
 	
 begin
 	-- CONCURRENT STATEMENTS ----------------------------
-	
 	o_clk <= f_clk;
-	
 	
 	-- PROCESSES ----------------------------------------
 	
