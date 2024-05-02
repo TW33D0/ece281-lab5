@@ -23,11 +23,12 @@
 --|
 --| ALU OPCODES:
 --|
---|     ADD     000
---|
---|
---|
---|
+--|     ADD                     000
+--|     SUB                     001
+--|     OR                      010
+--|     AND                     011
+--|     Left Logical Shift      10X
+--|     Right Logical Shift     11X
 --+----------------------------------------------------------------------------
 library ieee;
   use ieee.std_logic_1164.all;
@@ -35,21 +36,122 @@ library ieee;
 
 
 entity ALU is
--- TODO
+    port(
+        -- Inputs
+        i_A         : in std_logic_vector(7 downto 0);
+        i_op        : in std_logic_vector(2 downto 0);
+        i_B         : in std_logic_vector(7 downto 0);
+        -- Outputs
+        o_result    : out std_logic_vector(7 downto 0);
+        o_flags     : out std_logic_vector(2 downto 0)
+    );
 end ALU;
 
 architecture ALU_arch of ALU is 
   
-	-- declare components and signals
-
-  
+-- Declare components and signals
+    -- Declare Componenets
+        -- declare left shifter component
+    component leftshifter is
+        port(
+            i_BL     : in std_logic_vector(7 downto 0);
+            i_AL     : in std_logic_vector(7 downto 0);
+            o_shift  : out std_logic_vector(7 downto 0)
+        );
+    end component leftshifter; 
+     
+        -- declare right shifter component
+    component rightshifter is
+        port(
+            i_BR    : in std_logic_vector(7 downto 0);
+            i_AR    : in std_logic_vector(7 downto 0);
+            o_shift : out std_logic_vector(7 downto 0)
+        );
+    end component rightshifter;     
+    
+        -- declare flags component
+    component flags is
+        port(
+            i_result  : in std_logic_vector(7 downto 0);
+            o_sign    : out std_logic;
+            o_zero    : out std_logic
+        );
+    end component flags;
+    
+    -- Declare Signals
+    signal w_ADD_SUM : std_logic_vector(7 downto 0);  -- ouput from ADD/SUB MUX
+    signal w_Cout    : std_logic;                     -- connects Cout from the adder to o_flags
+    signal w_adder   : std_logic_vector(7 downto 0);  -- connects ADD/SUB to MUX
+    signal w_AND     : std_logic_vector(7 downto 0);  -- connects AND gate to mini MUX
+    signal w_OR      : std_logic_vector(7 downto 0);  -- connects OR gate to mini MUX
+    signal w_AND_OR  : std_logic_vector(7 downto 0);  -- connnects the AND/OR mini MUX to MUX
+    signal w_Lshift  : std_logic_vector(7 downto 0);  -- connects leftshifter to MUX
+    signal w_Rshift  : std_logic_vector(7 downto 0);  -- connects rightshifter to MUX
+    signal w_result  : std_logic_vector(7 downto 0);  -- connects MUX to flags component
+    
 begin
 	-- PORT MAPS ----------------------------------------
+        -- port map for left shifter
+    leftshifter_arch : leftshifter
+        port map( 
+            i_BL    => i_B,
+            i_AL    => i_A,
+            o_shift => w_Lshift
+        );
+        
+        -- port map for right shifter    
+    rightshifter_arch : rightshifter
+        port map( 
+            i_BR    => i_B,
+            i_AR    => i_A,
+            o_shift => w_Rshift
+        );
+    
+    flags_arch : flags
+        port map( 
+            i_result    => w_result,
+            o_sign      => o_flags(2),
+            o_zero      => o_flags(1)
+        );
 
-	
-	
-	-- CONCURRENT STATEMENTS ----------------------------
-	
-	
-	
+    -- CONCURRENT STATEMENTS ----------------------------
+	   
+	   -- Adder MUX
+    process (i_A, i_B, i_op(0))
+    begin
+        if i_op(0) = '0' then
+            w_ADD_SUM <= i_B;
+        else
+            w_ADD_SUM <= not i_B;
+        end if;
+    end process;
+
+	   -- AND/OR MUX
+    process (w_AND, w_OR, i_op(0))
+    begin
+       if i_op(0) = '0' then
+           w_AND_OR <= w_AND;
+       else
+           w_AND_OR <= w_OR;
+       end if;
+    end process;
+   
+    -- Adder MUX
+    process (i_A, i_B, i_op(2 downto 1))
+    begin
+        if i_op(2 downto 1) = "00" then
+            w_result <= w_adder;
+        elsif i_op(2 downto 1) = "01" then
+            w_result <= w_AND_OR;
+        elsif i_op(2 downto 1) = "10" then
+            w_result <= w_Lshift;
+        else
+            w_result <= w_Rshift;
+        end if;
+    end process;
+    w_Cout <= w_ADD_SUM(7) AND i_A(7);
+    o_flags(0) <= w_Cout;
+    w_adder <= std_logic_vector(unsigned(w_ADD_SUM) + unsigned(i_A));
+    o_result <= w_result;
+    
 end ALU_arch;
