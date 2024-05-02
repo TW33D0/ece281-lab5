@@ -138,7 +138,7 @@ end component TDM4;
 component sevenSegDecoder is
     port (
         i_D     : in std_logic_vector(3 downto 0);
-        o_S     : out std_logic_vector(7 downto 0)
+        o_S     : out std_logic_vector(6 downto 0)
     );
 end component sevenSegDecoder;
 
@@ -226,7 +226,7 @@ begin
     sevenSegDecoder_arch : sevenSegDecoder
     port map(
         i_D => w_data,
-        o_S => seg(7 downto 0)
+        o_S => seg(6 downto 0)
     );
 	
 	-- CONCURRENT STATEMENTS ----------------------------
@@ -241,7 +241,7 @@ begin
 	   elsif w_cycle = "1000" then
 	       w_bin <= w_result;
 	   else
-	       w_bin <= "0000";
+	       w_bin <= "00000000";
 	   end if;
 	end process;
 	       
