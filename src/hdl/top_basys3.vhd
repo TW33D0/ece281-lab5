@@ -176,7 +176,7 @@ begin
         -- port map for Regulator A
     regA_arch : regA
     port map(
-        i_clk => w_cycle(0),
+        i_clk => w_cycle(1),
         i_A   => sw(7 downto 0),
         o_A   => w_A
     );
@@ -184,7 +184,7 @@ begin
         -- port map for Regulator B
     regB_arch : regB
     port map(
-        i_clk => w_cycle(0),
+        i_clk => w_cycle(2),
         i_B   => sw(7 downto 0),
         o_B   => w_B
     );
