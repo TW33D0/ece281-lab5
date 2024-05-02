@@ -9,30 +9,29 @@ use IEEE.numeric_std.all;
 
 entity twoscomp_decimal is
     port (
-        i_binary: in std_logic_vector(7 downto 0);
-        o_negative: out std_logic;
-        o_hundreds: out std_logic_vector(3 downto 0);
-        o_tens: out std_logic_vector(3 downto 0);
-        o_ones: out std_logic_vector(3 downto 0)
+        i_bin  : in std_logic_vector(7 downto 0);
+        o_sign : out std_logic_vector(3 downto 0);
+        o_hund : out std_logic_vector(3 downto 0);
+        o_tens : out std_logic_vector(3 downto 0);
+        o_ones : out std_logic_vector(3 downto 0)
     );
 end twoscomp_decimal;
 
 architecture Behavioral of twoscomp_decimal is
 begin
-    process(i_binary)
+    process(i_bin)
         variable binary_value: integer;
         variable decimal_value: integer;
     begin
-        binary_value := to_integer(signed(i_binary));
+        binary_value := to_integer(signed(i_bin));
         if binary_value < 0 then
-            o_negative <= '1';
+            o_sign <= "1010";
             decimal_value := -binary_value;
         else
-            o_negative <= '0';
+            o_sign <= "0000";
             decimal_value := binary_value;
         end if;
-        
-        o_hundreds <= std_logic_vector(to_unsigned(decimal_value/100, 4));
+        o_hund <= std_logic_vector(to_unsigned(decimal_value/100, 4));
         decimal_value := decimal_value mod 100;
         o_tens <= std_logic_vector(to_unsigned(decimal_value/10, 4));
         decimal_value := decimal_value mod 10;

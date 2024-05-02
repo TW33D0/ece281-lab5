@@ -1,5 +1,22 @@
 --+----------------------------------------------------------------------------
 --|
+--| FILENAME      : top_basys3.vhd
+--| AUTHOR(S)     : C3C Ty Hubert
+--| CREATED       : 04/30/2024 Last Modified: 05/01/2024
+--| DESCRIPTION   : This file implements top level code for a CPU.
+--|  
+--| DOCUMENTATION : None
+--|
+--+----------------------------------------------------------------------------
+--|
+--| REQUIRED FILES :
+--|
+--|    Libraries : ieee
+--|    Packages  : std_logic_1164, numeric_std, unisim
+--|    Files     : None
+--|
+--+----------------------------------------------------------------------------
+--|
 --| NAMING CONVENSIONS :
 --|
 --|    xb_<port name>           = off-chip bidirectional port ( _pads file )
@@ -150,8 +167,8 @@ begin
     
         -- port map for clock divider
     clkdiv_inst : clock_divider    -- clock = 100 MHz / (2*k_DIV)
-    generic map(k_DIV => 25000000) -- k_DIV = 50 MHz / clock
-    port map(                      -- 2 Hz clock from 100 MHz
+    generic map(k_DIV => 200000)   -- k_DIV = 50 MHz / clock
+    port map(                      -- 250 Hz clock from 100 MHz
         i_clk => clk,
         o_clk => w_clk
     );
@@ -197,10 +214,10 @@ begin
     TDM4_arch : TDM4
     port map(
         i_clk  => w_clk,
-        i_D0   => w_sign,
-        i_D1   => w_hund,
-        i_D2   => w_tens,
-        i_D3   => w_ones,
+        i_D3   => w_sign,
+        i_D2   => w_hund,
+        i_D1   => w_tens,
+        i_D0   => w_ones,
         o_data => w_data,
         o_sel  => w_sel
     );

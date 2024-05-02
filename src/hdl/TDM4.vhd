@@ -11,8 +11,8 @@
 --| ---------------------------------------------------------------------------
 --|
 --| FILENAME      : TDM4.vhd
---| AUTHOR(S)     : Capt Phillip Warner
---| CREATED       : 03/2017
+--| AUTHOR(S)     : Capt Phillip Warner, C3C Ty Hubert
+--| CREATED       : 03/2017 Last Modified: 05/01/2024
 --| DESCRIPTION   : This file implements a 4 to 1 Time Division MUX (TDM).
 --|					Input and output data has a variable width set by k_WIDTH.
 --|					An internal MUX select line is connected to a 2 bit counter 
@@ -55,15 +55,16 @@ use ieee.numeric_std.all;
 
 entity TDM4 is
 	generic ( constant k_WIDTH : natural  := 4); -- bits in input and output
-    Port ( i_clk		: in  STD_LOGIC;
-           i_reset		: in  STD_LOGIC; -- asynchronous
-           i_D3 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
-		   i_D2 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
-		   i_D1 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
-		   i_D0 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
-		   o_data		: out STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
-		   o_sel		: out STD_LOGIC_VECTOR (3 downto 0)	-- selected data line (one-cold)
-	);
+    port( 
+        i_clk		: in  STD_LOGIC;
+        i_reset		: in  STD_LOGIC; -- asynchronous
+        i_D3 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+        i_D2 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+        i_D1 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+        i_D0 		: in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+        o_data		: out STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+        o_sel		: out STD_LOGIC_VECTOR (3 downto 0)	-- selected data line (one-cold)
+	); 
 end TDM4;
 
 architecture TDM4_arch of TDM4 is
