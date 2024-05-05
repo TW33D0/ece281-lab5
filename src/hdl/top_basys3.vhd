@@ -67,8 +67,10 @@ architecture top_basys3_arch of top_basys3 is
         -- declare controller component
 component controller_fsm is
     port( 
+        i_clk     : in  std_logic;
         i_reset   : in  std_logic;
-        i_adv     : in  std_logic
+        i_adv     : in  std_logic;
+        o_cycle   : out std_logic_vector(3 downto 0)
     );
 end component controller_fsm;
 
@@ -84,7 +86,7 @@ end component clock_divider;
         -- declare regulator A component
 component regA is
     port (
-        i_clk   : in std_logic;
+        i_clk   : in std_logic_vector(3 downto 0);
         i_A     : in std_logic_vector(7 downto 0);
         o_A     : out std_logic_vector(7 downto 0)
     );
@@ -93,7 +95,7 @@ end component regA;
         -- declare regulator B component
 component regB is
     port (
-        i_clk   : in std_logic;
+        i_clk   : in std_logic_vector(3 downto 0);
         i_B     : in std_logic_vector(7 downto 0);
         o_B     : out std_logic_vector(7 downto 0)
     );
@@ -155,14 +157,17 @@ signal w_ones   : std_logic_vector(3 downto 0);   -- connects the ones value to 
 signal w_clk    : std_logic;                      -- connects the slowed clock to the TDM
 signal w_sel    : std_logic_vector(3 downto 0);   -- connects the SEL to the anode MUX
 signal w_data   : std_logic_vector(3 downto 0);   -- connects TDM to 7SegDecoder
+signal w_flags  : std_logic_vector(2 downto 0);   -- connects flags to LEDs
 
 begin
 	-- PORT MAPS ----------------------------------------
         -- port map for controller
 	controller_fsm_arch : controller_fsm
     port map( 
+        i_clk   => clk,
         i_reset => btnU,
-        i_adv   => btnC
+        i_adv   => btnC,
+        o_cycle => w_cycle
     );
     
         -- port map for clock divider
@@ -176,7 +181,7 @@ begin
         -- port map for Regulator A
     regA_arch : regA
     port map(
-        i_clk => w_cycle(1),
+        i_clk => w_cycle,
         i_A   => sw(7 downto 0),
         o_A   => w_A
     );
@@ -184,7 +189,7 @@ begin
         -- port map for Regulator B
     regB_arch : regB
     port map(
-        i_clk => w_cycle(2),
+        i_clk => w_cycle,
         i_B   => sw(7 downto 0),
         o_B   => w_B
     );
@@ -196,7 +201,7 @@ begin
         i_op     => sw(2 downto 0),
         i_B      => w_B,
         o_result => w_result,
-        o_flags  => led(15 downto 13)
+        o_flags  => w_flags
     );
 
     
@@ -232,30 +237,17 @@ begin
 	-- CONCURRENT STATEMENTS ----------------------------
 	
 	   -- MUX 1
-	process (w_A, w_result, w_B, w_cycle)
-	begin
-	   if w_cycle = "0010" then
-	       w_bin <= w_A;
-	   elsif w_cycle = "0100" then
-	       w_bin <= w_B;
-	   elsif w_cycle = "1000" then
-	       w_bin <= w_result;
-	   else
-	       w_bin <= "00000000";
-	   end if;
-	end process;
+	w_bin <= w_A when (w_cycle = "0010" or w_cycle = "0000" or w_cycle = "0100") else
+	         w_B when (w_cycle = "0111" or w_cycle = "0110") else
+	         w_result when w_cycle = "1000" else
+	         "00000000";
 	       
 	   -- MUX 2
-	process (w_A, w_result, w_B, w_cycle)
-    begin
-        if w_cycle = "0001" then
-            an(3) <= '1';
-            an(2) <= '1';
-            an(1) <= '1';
-            an(0) <= '1';
-        else
-            an <= w_sel;
-        end if;
-    end process;
+	an <= (others => '1') when w_cycle = "0001" else 
+	      w_sel;
+	
+	led(3 downto 0) <= w_cycle;
+    led(15 downto 13) <= w_flags when w_cycle = "1000" else
+                         "000";
 	
 end top_basys3_arch;

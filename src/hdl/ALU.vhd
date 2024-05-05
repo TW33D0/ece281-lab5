@@ -88,7 +88,9 @@ architecture ALU_arch of ALU is
     signal w_Lshift  : std_logic_vector(7 downto 0);  -- connects leftshifter to MUX
     signal w_Rshift  : std_logic_vector(7 downto 0);  -- connects rightshifter to MUX
     signal w_result  : std_logic_vector(7 downto 0);  -- connects MUX to flags component
-    
+    signal w_nB      : std_logic_vector(7 downto 0);  -- makes it i_B not
+    signal w_sub     : std_logic_vector(7 downto 0);  -- connects subtration to MUX
+
 begin
 	-- PORT MAPS ----------------------------------------
         -- port map for left shifter
@@ -115,41 +117,42 @@ begin
         );
 
     -- CONCURRENT STATEMENTS ----------------------------
-	   
+	  
+	  w_AND <= i_A and i_B;
+	  w_OR <= i_A or i_B;
+	  w_nB <= not i_B;
+	  w_sub <= std_logic_vector(unsigned(w_nB) + 1);
+	  
 	   -- Adder MUX
-    process (i_A, i_B, i_op(0))
-    begin
-        if i_op(0) = '0' then
-            w_ADD_SUM <= i_B;
-        else
-            w_ADD_SUM <= not i_B;
-        end if;
-    end process;
+	w_ADD_SUM <= i_B when i_op(0) = '0' else
+	             w_sub;
 
 	   -- AND/OR MUX
-    process (w_AND, w_OR, i_op(0))
-    begin
-       if i_op(0) = '0' then
-           w_AND_OR <= w_AND;
-       else
-           w_AND_OR <= w_OR;
-       end if;
-    end process;
+	w_AND_OR <= w_AND when i_op(0) = '0' else
+	            w_OR;
    
-    -- Adder MUX
-    process (i_A, i_B, i_op(2 downto 1))
-    begin
-        if i_op(2 downto 1) = "00" then
-            w_result <= w_adder;
-        elsif i_op(2 downto 1) = "01" then
-            w_result <= w_AND_OR;
-        elsif i_op(2 downto 1) = "10" then
-            w_result <= w_Lshift;
-        else
-            w_result <= w_Rshift;
-        end if;
-    end process;
-    w_Cout <= w_ADD_SUM(7) AND i_A(7);
+        -- Adder MUX
+    w_result <= w_adder when i_op(2 downto 1) = "00" else
+                w_AND_OR when i_op(2 downto 1) = "01" else
+                w_Lshift when i_op(2 downto 1) = "10" else
+                w_Rshift;
+  
+    w_Cout <= (i_B(7) AND i_A(7)) or
+              (i_B(6) AND i_A(6)) or
+              (i_B(5) AND i_A(5)) or
+              (i_B(4) AND i_A(4)) or
+              (i_B(3) AND i_A(3)) or
+              (i_B(2) AND i_A(2)) or
+              (i_B(1) AND i_A(1)) or
+              (i_B(0) AND i_A(0)) or
+              (w_nB(7) AND i_A(7)) or
+              (w_nB(6) AND i_A(6)) or
+              (w_nB(5) AND i_A(5)) or
+              (w_nB(4) AND i_A(4)) or
+              (w_nB(3) AND i_A(3)) or
+              (w_nB(2) AND i_A(2)) or
+              (w_nB(1) AND i_A(1)) or
+              (w_nB(0) AND i_A(0));
     o_flags(0) <= w_Cout;
     w_adder <= std_logic_vector(unsigned(w_ADD_SUM) + unsigned(i_A));
     o_result <= w_result;
