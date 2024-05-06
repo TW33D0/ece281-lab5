@@ -144,7 +144,7 @@ begin
               (i_B(3) AND i_A(3)) or
               (i_B(2) AND i_A(2)) or
               (i_B(1) AND i_A(1)) or
-              (i_B(0) AND i_A(0)) or
+              (i_B(0) AND i_A(0)) when i_op = "000" else
               (w_nB(7) AND i_A(7)) or
               (w_nB(6) AND i_A(6)) or
               (w_nB(5) AND i_A(5)) or
@@ -152,7 +152,7 @@ begin
               (w_nB(3) AND i_A(3)) or
               (w_nB(2) AND i_A(2)) or
               (w_nB(1) AND i_A(1)) or
-              (w_nB(0) AND i_A(0)) when i_op(2 downto 1) = "00" else
+              (w_nB(0) AND i_A(0)) when i_op = "001" else
               '0';
     o_flags(0) <= w_Cout;
     w_adder <= std_logic_vector(unsigned(w_ADD_SUM) + unsigned(i_A));
