@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="ALU_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="ALU_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="103600001fs"></ZoomEndTime>
+      <Cursor1Time time="158800000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="127"></NameColumnWidth>
+      <ValueColumnWidth column_width="314"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="5" />
+   <wvobject fp_name="/ALU_tb/w_A" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">w_A[7:0]</obj_property>
+      <obj_property name="ObjectShortName">w_A[7:0]</obj_property>
+      <obj_property name="label">i_A</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tb/w_op" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">w_op[2:0]</obj_property>
+      <obj_property name="ObjectShortName">w_op[2:0]</obj_property>
+      <obj_property name="label">i_op</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tb/w_B" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">w_B[7:0]</obj_property>
+      <obj_property name="ObjectShortName">w_B[7:0]</obj_property>
+      <obj_property name="label">i_B</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tb/w_result" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">w_result[7:0]</obj_property>
+      <obj_property name="ObjectShortName">w_result[7:0]</obj_property>
+      <obj_property name="label">i_result</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tb/w_flags" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">w_flags[2:0]</obj_property>
+      <obj_property name="ObjectShortName">w_flags[2:0]</obj_property>
+      <obj_property name="label">i_flags</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/ALU_tb/w_flags[2]" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+         <obj_property name="label">CPU Sign</obj_property>
+      </wvobject>
+      <wvobject fp_name="/ALU_tb/w_flags[1]" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+         <obj_property name="label">CPU Zero</obj_property>
+      </wvobject>
+      <wvobject fp_name="/ALU_tb/w_flags[0]" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+         <obj_property name="label">CPU Cout</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

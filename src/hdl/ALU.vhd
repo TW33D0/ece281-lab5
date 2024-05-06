@@ -128,8 +128,8 @@ begin
 	             w_sub;
 
 	   -- AND/OR MUX
-	w_AND_OR <= w_AND when i_op(0) = '0' else
-	            w_OR;
+	w_AND_OR <= w_OR when i_op(0) = '0' else
+	            w_AND;
    
         -- Adder MUX
     w_result <= w_adder when i_op(2 downto 1) = "00" else
@@ -152,7 +152,8 @@ begin
               (w_nB(3) AND i_A(3)) or
               (w_nB(2) AND i_A(2)) or
               (w_nB(1) AND i_A(1)) or
-              (w_nB(0) AND i_A(0));
+              (w_nB(0) AND i_A(0)) when i_op(2 downto 1) = "00" else
+              '0';
     o_flags(0) <= w_Cout;
     w_adder <= std_logic_vector(unsigned(w_ADD_SUM) + unsigned(i_A));
     o_result <= w_result;

@@ -239,7 +239,7 @@ begin
 	   -- MUX 1
 	w_bin <= w_A when (w_cycle = "0010" or w_cycle = "0000" or w_cycle = "0100") else
 	         w_B when (w_cycle = "0111" or w_cycle = "0110") else
-	         w_result when w_cycle = "1000" else
+	         w_result when (w_cycle = "1000" or w_cycle = "1111") else
 	         "00000000";
 	       
 	   -- MUX 2
